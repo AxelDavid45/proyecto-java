@@ -1,14 +1,25 @@
 package Un;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+//Immportamos el paquete para comprobar que no entren
+import java.util.regex.*;
 
 public class Principal {
 
     //Constantes para inicio de sesion
     static final String ADMINISTRADOR = "1";
     static final String PASSWORD = "1";
+    //Patron con la expresion regular
+//    static final Pattern noLetras = Pattern.compile("[a-zA-Z]+");
+    static final Pattern noNumeros = Pattern.compile("[0-9A-Za-z]+");
+    //Matcher
+    Matcher m;
+    //Nos serviran para empezar a controlar las entradas de los datos
+    boolean errorString = true;
+    boolean errorNumeric = true;
 
     //Variables
     private boolean login = false;
@@ -20,6 +31,7 @@ public class Principal {
     private Scanner entrada = new Scanner(System.in);
     private boolean impresion;
     double acumpago;
+
 
     //Arraylists con que almacenan los datos del programa
     private ArrayList<Estudiante> alumnos = new ArrayList<>();
@@ -49,7 +61,6 @@ public class Principal {
                 do {
                     MostrarMenuPrincipal();
                     OpcSelec = entrada.nextInt();
-
                     switch (OpcSelec) {
                         //Menu alumnos
                         case 1:
@@ -270,8 +281,19 @@ public class Principal {
     private void CrearAlumno() {
         System.out.println("\n" + "CREANDO ALUMNO");
         entrada.nextLine();
-        System.out.println("\n" + "Ingrese Nombre:");
-        String nom = entrada.nextLine();
+        String nom = "ok";
+
+        while (errorString) {
+            System.out.println("\n" + "Ingrese Nombre:");
+            nom = entrada.nextLine();
+            m = noNumeros.matcher(nom);
+            if(m.matches()){
+                errorString = true;
+                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            } else {
+                errorString = false;
+            }
+        }
         System.out.println("\n" + "Ingrese Domicilio");
         String dom = entrada.nextLine();
         System.out.println("\n" + "Ingrese Turno");
