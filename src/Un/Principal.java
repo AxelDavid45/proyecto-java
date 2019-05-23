@@ -1,7 +1,6 @@
 package Un;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 //Immportamos el paquete para comprobar que no entren
@@ -13,8 +12,9 @@ public class Principal {
     static final String ADMINISTRADOR = "1";
     static final String PASSWORD = "1";
     //Patron con la expresion regular
-//    static final Pattern noLetras = Pattern.compile("[a-zA-Z]+");
-    static final Pattern noNumeros = Pattern.compile("[0-9A-Za-z]+");
+    static final Pattern noNumerosconLetras = Pattern.compile("[^0-9]+"); //Expresion regular cambiada para que no
+    // acepte numeros y letras
+    static final Pattern noNumeros = Pattern.compile("[0-9]+");
     //Matcher
     Matcher m;
     //Nos serviran para empezar a controlar las entradas de los datos
@@ -232,7 +232,7 @@ public class Principal {
             System.out.println("-----------------MOSTRANDO TODOS LOS ALUMNOS----------------------");
             for (int i = 0; i < nombreArreglo.size(); i++) {
                 System.out.println("---------------------------------------------------------------");
-                System.out.println("ID: " + i + " Nombre: " + nombreArreglo.get(i).getNombre()
+                System.out.println("ID: " + i + "\n Nombre: " + nombreArreglo.get(i).getNombre()
                         + "\nHorario: " + nombreArreglo.get(i).getHorario() + "\nGrupo: " + nombreArreglo.get(i).getGrupo() + "\nAsistencia: " + nombreArreglo.get(i).isAsistencia() + "\nPromedio: " + nombreArreglo.get(i).getPromedio());
                 System.out.println("---------------------------------------------------------------");
                 this.impresion = true;
@@ -263,48 +263,126 @@ public class Principal {
     }
 
     private void CrearProfesor() {
-        System.out.println("\n" + "CREANDO PPROFESOR");
-        entrada.nextLine();
-        System.out.println("\n" + "Ingrese Nombre:");
-        String nom2 = entrada.nextLine();
-        System.out.println("\n" + "Ingrese Domicilio");
-        String dom2 = entrada.nextLine();
-        System.out.println("\n" + "Ingrese turno del profesor:");
-        String hor2 = entrada.nextLine();
-        System.out.println("\n" + "Ingrese el jefe inmediato:");
-        String jefe = entrada.nextLine();
-        System.out.println("\n" + "Ingrese la materia que imparte seguida de la carrera (Ej. Calculo Integral - SISTEMAS)");
-        String carre2 = entrada.nextLine();
-        profesores.add(new Profesor(nom2, hor2, dom2, jefe, carre2));
+        errorString = true; //Para que el ciclo vuelva a iniciar en TRUE
+        //Variables locales que se usaran para el metodo
+        String  nom2 = "ok";
+        String  hor2 = "ok";
+        String jefe = "ok";
+        String carre2 = "ok";
+        System.out.println("\n" + "CREANDO PROFESOR");
+        entrada.nextLine(); //Limpia el buffer
+
+        while (errorString){
+            System.out.println("\n" + "Ingrese el Nombre Completo del profesor: ");
+            nom2 = entrada.nextLine();
+            m = noNumerosconLetras.matcher(nom2);
+           if (m.matches()) {
+            errorString = true;
+            System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+        } else {
+            errorString = false;
+        }
     }
 
-    private void CrearAlumno() {
-        System.out.println("\n" + "CREANDO ALUMNO");
-        entrada.nextLine();
-        String nom = "ok";
+        System.out.println("\n" + "Ingrese Domicilio");
+        String dom2 = entrada.nextLine();
 
-        while (errorString) {
-            System.out.println("\n" + "Ingrese Nombre:");
-            nom = entrada.nextLine();
-            m = noNumeros.matcher(nom);
-            if(m.matches()){
+        errorString = true;
+        while(errorString){
+            System.out.println("\n" + "Ingrese turno del profesor:");
+            hor2 = entrada.nextLine();
+            m = noNumerosconLetras.matcher(hor2);
+            if (m.matches()) {
+                errorString = true;
+                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            } else {
+                errorString = false;
+            }
+    }
+
+        errorString = true;
+        while(errorString){
+        System.out.println("\n" + "Ingrese el jefe inmediato:");
+        jefe = entrada.nextLine();
+            m = noNumerosconLetras.matcher(jefe);
+            if (m.matches()) {
                 errorString = true;
                 System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
             } else {
                 errorString = false;
             }
         }
+        errorString = true;
+        while(errorString){
+        System.out.println("\n" + "Ingrese la materia que imparte seguida de la carrera (Ej. Calculo Integral - SISTEMAS)");
+        carre2 = entrada.nextLine();
+        m = noNumerosconLetras.matcher(carre2);
+        if (m.matches()) {
+            errorString = true;
+            System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+        } else {
+            errorString = false;
+        }
+    }
+        profesores.add(new Profesor(nom2, hor2, dom2, jefe, carre2));
+    }
+
+    private void CrearAlumno() {
+        errorString = true; //Para que el ciclo vuelva a iniciar en TRUE
+        //Variables locales que se usaran para el metodo
+        String nom ="ok";
+        String turn = "ok";
+        String grup ="ok";
+        System.out.println("\n" + "CREANDO ALUMNO");
+        entrada.nextLine(); //Limpia el buffer
+
+        while (errorString) { //Entra a comprobar el nombre
+            System.out.println("\n" + "Ingrese el Nombre Completo: ");
+            nom = entrada.nextLine();
+            m = noNumerosconLetras.matcher(nom);
+            if(!m.matches()){ //El matches tiene que ser false porque eso quiere decir que no encontro ningun numero.
+                errorString = true;
+                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            } else {
+                errorString = false;
+            }
+        }
+
+        errorString=true; //Vuelve a poner la variable en true para entrar al while
+        while (errorString) {
+            System.out.println("\n" + "Ingrese el Turno que le corresponde: ");
+            turn = entrada.nextLine();
+            m = noNumerosconLetras.matcher(turn);
+            if (m.matches()) {
+                errorString = true;
+                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            } else {
+                errorString = false;
+            }
+        }
+
         System.out.println("\n" + "Ingrese Domicilio");
         String dom = entrada.nextLine();
-        System.out.println("\n" + "Ingrese Turno");
-        String turn = entrada.nextLine();
-        System.out.println("\n" + "Ingrese Semestre");
+
+        System.out.println("\n" + "Ingrese Semestre: "+"     SOLO NUMEROS.");
         int gra = entrada.nextInt();
+
+        errorString=true;
         entrada.nextLine();
-        System.out.println("\n" + "Ingrese Grupo");
-        String grup = entrada.nextLine();
+        while(errorString) {
+            System.out.println("\n" + "Ingrese su Grupo");
+            grup = entrada.nextLine();
+            m = noNumerosconLetras.matcher(grup);
+            if (m.matches()) {
+                errorString = true;
+                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            } else {
+                errorString = false;
+            }
+        }
         alumnos.add(new Estudiante(nom, turn, dom, gra, grup));
     }
+
 
     private static void MostrarMenuPrincipal() {
         System.out.println("\n" + "1. A L U M N O");
