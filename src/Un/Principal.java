@@ -1,20 +1,22 @@
 package Un;
 
 import java.util.ArrayList;
+//import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 //Immportamos el paquete para comprobar que no entren
-import java.util.regex.*;
+import java.util.regex.*;// para las excepciones creadas por el usuario
 
 public class Principal {
-
     //Constantes para inicio de sesion
     static final String ADMINISTRADOR = "1";
     static final String PASSWORD = "1";
     //Patron con la expresion regular
-    static final Pattern noNumerosconLetras = Pattern.compile("[^0-9]+"); //Expresion regular cambiada para que no
+    //static final Pattern noLetras = Pattern.compile("[a-zA-Z]+");
+    //static final Pattern noNumerosconLetras = Pattern.compile("[0-9A-Za-z]+");
+    static final Pattern noNumerosconLetras = Pattern.compile("[^0-9]+");// Expresión regular cambiada para que no
     // acepte numeros y letras
-    static final Pattern noNumeros = Pattern.compile("[0-9]+");
+    static final Pattern noNumeros = Pattern.compile( " [0-9] + " );
     //Matcher
     Matcher m;
     //Nos serviran para empezar a controlar las entradas de los datos
@@ -40,190 +42,205 @@ public class Principal {
     public static void main(String[] args) {
         Principal logica = new Principal();
         logica.Logica();
-
     }
 
     private void Logica() {
         Administrador Admon = new Administrador("Administrador", "Matu", "Lomas", "Idi Amin",
                 "Administrador"); //Objeto para nuestra clase interface
-        do {
-            //Introduce los datos del usuario para comprobarlo
-            String Usuario = JOptionPane.showInputDialog(null, "Ingresa tu usuario o escribe EXIT para salir");
-            String Password = JOptionPane.showInputDialog(null, "Ingresa tu contraseña o escribe EXIT para salir");
+        try {
+            do {
+                //Introduce los datos del usuario para comprobarlo
+                String Usuario = JOptionPane.showInputDialog(null, "Ingresa tu usuario o escribe EXIT para salir");
+                String Password = JOptionPane.showInputDialog(null, "Ingresa tu contraseña o escribe EXIT para salir");
 
-            //Inicia login
-            if (Usuario.equals(ADMINISTRADOR) && Password.equals(PASSWORD)) {
-                menu = false; // Cambia la variable menu para entrar al menu
-                login = true; //Cambia a la variable a true para no repetir el login
-                JOptionPane.showMessageDialog(null, "INICIO DE SESION CORRECTO, DIRIGETE A LA TERMINAL...");
-                System.out.println("**** M E N U ******");
+                //Inicia login
+                if (Usuario.equals(ADMINISTRADOR) && Password.equals(PASSWORD)) {
+                    menu = false; // Cambia la variable menu para entrar al menu
+                    login = true; //Cambia a la variable a true para no repetir el login
+                    JOptionPane.showMessageDialog(null, "INICIO DE SESION CORRECTO, DIRIGETE A LA TERMINAL...");
+                    System.out.println("**** M E N U ******");
 
-                do {
-                    MostrarMenuPrincipal();
-                    OpcSelec = entrada.nextInt();
-                    switch (OpcSelec) {
-                        //Menu alumnos
-                        case 1:
-                            do {
-                                regresar = 1; //Hace que regrese al menu
-                                MostrarSubMenuAlumnos();
-                                OpcSelec2 = entrada.nextInt();
-                                //Menu Alumnos
-                                switch (OpcSelec2) {
-                                    case 1:
-                                        this.CrearAlumno();//Creacion del alumno del administrador
-                                        break;
-                                    case 2:
-                                        this.ImpresionArregloAlumnos(alumnos); //Borrar alumno
-                                        if (this.impresion) {
-                                            System.out.println("\nIngresa el ID del elemento: ");
-                                            idElegido = entrada.nextInt();
-                                            //Borra el elemento seleccionado
-                                            alumnos.remove(idElegido);
-                                        }
-                                        break;
-                                    case 3:
-                                        //Imprimir datos de alumnos
-                                        this.ImpresionArregloAlumnos(alumnos);
-                                        break;
-                                    case 4:
-                                        regresar = 0;
-                                        break;
+                    do {
+                        MostrarMenuPrincipal();
+                        OpcSelec = entrada.nextInt();
+                        switch (OpcSelec) {
+                            //Menu alumnos
+                            case 1:
+                                do {
+                                    regresar = 1; //Hace que regrese al menu
+                                    MostrarSubMenuAlumnos();
+                                    OpcSelec2 = entrada.nextInt();
+                                    //Menu Alumnos
+                                    switch (OpcSelec2) {
+                                        case 1:
+                                            this.CrearAlumno();//Creacion del alumno del administrador
+                                            break;
+                                        case 2:
+                                            this.ImpresionArregloAlumnos(alumnos); //Borrar alumno
+                                            if (this.impresion) {
+                                                System.out.println("\nIngresa el ID del elemento: ");
+                                                idElegido = entrada.nextInt();
+                                                //Borra el elemento seleccionado
+                                                alumnos.remove(idElegido);
+                                            }
+                                            break;
+                                        case 3:
+                                            //Imprimir datos de alumnos
+                                            this.ImpresionArregloAlumnos(alumnos);
+                                            break;
+                                        case 4:
+                                            regresar = 0;
+                                            break;
+                                    }
+                                } while (regresar != 0);
+                                break;
+                            case 2:
+                                do {
+                                    regresar = 1;
+                                    MostrarSubMenuProf();
+                                    System.out.println("\t \t \t ¿Que opcion desea escoger?");
+                                    OpcSelect3 = entrada.nextInt();
+                                    switch (OpcSelect3) {
+                                        case 1:
+                                            this.CrearProfesor();
+                                            break;
+                                        case 2:
+                                            this.ImpresionArregloProfesores(profesores);
+                                            if (this.impresion) {
+                                                System.out.println("\nIngresa el ID del elemento: ");
+                                                idElegido = entrada.nextInt();
+                                                //Borra el elemento seleccionado
+                                                profesores.remove(idElegido);
+                                            }
+                                            break;
+                                        case 3:
+                                            this.ImpresionArregloProfesores(profesores);
+                                            break;
+                                        case 4:
+                                            this.ImpresionArregloProfesores(profesores);
+                                            if (this.impresion) {
+                                                System.out.println("Ingresa el id para marcarle la asistencia");
+                                                idElegido = entrada.nextInt();
+                                                profesores.get(idElegido).setAsistencia(true);
+                                            }
+                                            break;
+                                        case 5:
+                                            //Asigna el grupo del profesor
+                                            this.ImpresionArregloProfesores(profesores);
+                                            if (this.impresion) {
+                                                String grupo = "ok";
+                                                System.out.println("Ingrese el ID del profesor");
+                                                idElegido = entrada.nextInt();
+                                                entrada.nextLine();
+
+                                                errorString = true;
+                                                while (errorString) {
+                                                    System.out.println("Ingresa el grupo:");
+                                                    grupo = entrada.nextLine();
+                                                    profesores.get(idElegido).setGrupo(grupo);
+                                                    m = noNumerosconLetras.matcher(grupo);
+                                                    if (!m.matches()) {
+                                                        errorString = true;
+                                                        System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS)");
+                                                    } else {
+                                                        errorString = false;
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case 6:
+                                            this.ImpresionArregloProfesores(profesores);
+                                            if (this.impresion) {
+                                                System.out.println("Ingresa el id para asignar pago");
+                                                idElegido = entrada.nextInt();
+                                                System.out.println("Â¿Cuantas horas trabajo el profesor");
+                                                int ht = entrada.nextInt();
+                                                profesores.get(idElegido).setHt(ht);
+                                                salario = profesores.get(idElegido).cobrar();
+                                                acumpago = Admon.estadodeCuenta(salario);//---------------Acumulador de todos los pagos.
+                                                System.out.println("\n" + "El pago del profesor " + profesores.get(idElegido).getNombre() + " es"
+                                                        + " " + salario);
+                                            }
+                                            break;
+                                        case 7:
+                                            System.out.println("\n" + "El Acumulado de todos los pagos es de : " + acumpago);
+                                            break;
+                                        case 8:
+                                            regresar = 0;
+                                            break;
+                                    }
+                                } while (regresar != 0);
+                                break;
+                            case 3:
+                                menu = true;
+                                login = false;
+                                System.out.println("\u000C");
+                                break;
+                        }
+                    } while (!menu);
+                } else if (Usuario.equals("Maestro") && Password.equals(PASSWORD)) {
+                    menu = false;
+                    login = true; //Cambia a la variable a true para no repetir el login
+
+                    do {
+                        MostrarMenuProf();
+                        System.out.println("\t \t \t ¿Que opcion desea escoger?");
+                        int resp2 = entrada.nextInt();
+
+                        switch (resp2) {
+                            case 1:
+                                this.ImpresionArregloAlumnos(alumnos);
+                                if (this.impresion) {
+                                    System.out.println("Ingrese el Id del Alumno");
+                                    int ID = entrada.nextInt();
+                                    entrada.nextLine();
+                                    System.out.println("¿El Alumno asistio hoy?");
+                                    String asis = entrada.nextLine();
+
+                                    if (asis.equals("si") || asis.equals("Si")) {
+                                        alumnos.get(ID).setAsistencia(true);
+                                    } else {
+                                        alumnos.get(ID).setAsistencia(false);
+                                    }
+
                                 }
-                            } while (regresar != 0);
-                            break;
-                        case 2:
-                            do {
-                                regresar = 1;
-                                MostrarSubMenuProf();
-                                System.out.println("\t \t \t ¿Qué Opcion desea escoger?");
-                                OpcSelect3 = entrada.nextInt();
-                                switch (OpcSelect3) {
-                                    case 1:
-                                        this.CrearProfesor();
-                                        break;
-                                    case 2:
-                                        this.ImpresionArregloProfesores(profesores);
-                                        if (this.impresion) {
-                                            System.out.println("\nIngresa el ID del elemento: ");
-                                            idElegido = entrada.nextInt();
-                                            //Borra el elemento seleccionado
-                                            profesores.remove(idElegido);
-                                        }
-                                        break;
-                                    case 3:
-                                        this.ImpresionArregloProfesores(profesores);
-                                        break;
-                                    case 4:
-                                        this.ImpresionArregloProfesores(profesores);
-                                        if (this.impresion) {
-                                            System.out.println("Ingresa el id para marcarle la asistencia");
-                                            idElegido = entrada.nextInt();
-                                            profesores.get(idElegido).setAsistencia(true);
-                                        }
-                                        break;
-                                    case 5:
-                                        //Asigna el grupo del profesor
-                                        this.ImpresionArregloProfesores(profesores);
-                                        if (this.impresion) {
-                                            System.out.println("Ingrese el ID del profesor");
-                                            idElegido = entrada.nextInt();
-                                            entrada.nextLine();
-
-                                            System.out.println("Ingresa el grupo:");
-                                            grupo = entrada.nextLine();
-                                            profesores.get(idElegido).setGrupo(grupo);
-                                        }
-                                        break;
-                                    case 6:
-                                        this.ImpresionArregloProfesores(profesores);
-                                        if (this.impresion) {
-                                            System.out.println("Ingresa el id para asignar pago");
-                                            idElegido = entrada.nextInt();
-                                            System.out.println("¿Cuantas horas trabajo el profesor");
-                                            int ht = entrada.nextInt();
-                                            profesores.get(idElegido).setHt(ht);
-                                            salario = profesores.get(idElegido).cobrar();
-                                            acumpago = Admon.estadodeCuenta(salario);//---------------Acumulador de todos los pagos.
-                                            System.out.println("\n" + "El pago del profesor " + profesores.get(idElegido).getNombre() + " es"
-                                                    + " " + salario);
-                                        }
-                                        break;
-                                    case 7:
-                                        System.out.println("\n" + "El Acumulado de todos los pagos es de : " + acumpago);
-                                        break;
-                                    case 8:
-                                        regresar = 0;
-                                        break;
+                                break;
+                            case 2:
+                                this.ImpresionArregloAlumnos(alumnos);
+                                break;
+                            case 3:
+                                this.ImpresionArregloAlumnos(alumnos);
+                                if (this.impresion) {
+                                    System.out.println("Ingrese el ID");
+                                    idElegido = entrada.nextInt();
+                                    System.out.println("Escribe el prommedio");
+                                    double prom = entrada.nextDouble();
+                                    alumnos.get(idElegido).setPromedio(prom);
                                 }
-                            } while (regresar != 0);
-                            break;
-                        case 3:
-                            menu = true;
-                            login = false;
-                            System.out.println("\u000C");
-                            break;
-                    }
-                } while (!menu);
-            } else if (Usuario.equals("Maestro") && Password.equals(PASSWORD)) {
-                menu = false;
-                login = true; //Cambia a la variable a true para no repetir el login
+                                break;
+                            case 4:
+                                menu = true;
+                                login = false;
+                                System.out.println("\u000C");
+                                break;
+                        }
+                    } while (!menu);
+                } else if (Usuario.equals("Salario") && Password.equals("anotu")) {
+                    int horastraba = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa las horas trabajadas del administrador"));
+                    double salarioAd = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese el salario del administrador"));
+                    double pagoTotal = Admon.cobrar(horastraba, salarioAd);
+                    JOptionPane.showMessageDialog(null, "El pago del administrador es: " + pagoTotal);
 
-                do {
-                    MostrarMenuProf();
-                    System.out.println("\t \t \t ¿Qué Opcion desea escoger?");
-                    int resp2 = entrada.nextInt();
-
-                    switch (resp2) {
-                        case 1:
-                            this.ImpresionArregloAlumnos(alumnos);
-                            if (this.impresion) {
-                                System.out.println("Ingrese el Id del Alumno");
-                                int ID = entrada.nextInt();
-                                entrada.nextLine();
-                                System.out.println("¿El Alumno asistio hoy?");
-                                String asis = entrada.nextLine();
-
-                                if (asis.equals("si") || asis.equals("Si")) {
-                                    alumnos.get(ID).setAsistencia(true);
-                                } else {
-                                    alumnos.get(ID).setAsistencia(false);
-                                }
-
-                            }
-                            break;
-                        case 2:
-                            this.ImpresionArregloAlumnos(alumnos);
-                            break;
-                        case 3:
-                            this.ImpresionArregloAlumnos(alumnos);
-                            if (this.impresion) {
-                                System.out.println("Ingrese el ID");
-                                idElegido = entrada.nextInt();
-                                System.out.println("Escribe el prommedio");
-                                double prom = entrada.nextDouble();
-                                alumnos.get(idElegido).setPromedio(prom);
-                            }
-                            break;
-                        case 4:
-                            menu = true;
-                            login = false;
-                            System.out.println("\u000C");
-                            break;
-                    }
-                } while (!menu);
-            } else if (Usuario.equals("Salario") && Password.equals("anotu")) {
-                int horastraba = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa las horas trabajadas del administrador"));
-                double salarioAd = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese el salario del administrador"));
-                double pagoTotal = Admon.cobrar(horastraba, salarioAd);
-                JOptionPane.showMessageDialog(null, "El pago del administrador es: " + pagoTotal);
-
-            } else if (Usuario.equals("EXIT") && Password.equals("EXIT")) {
-                System.exit(0);
-            } else {
-                JOptionPane.showMessageDialog(null, "Tus datos son incorrectos verificalos");
-            }
-        } while (!login);
+                } else if (Usuario.equals("EXIT") && Password.equals("EXIT")) {
+                    System.exit(0);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Tus datos son incorrectos verificalos");
+                }
+            } while (!login);
+        } catch(NullPointerException e) {
+            System.out.println("Saliendo del sistema...");
+            System.exit(0);
+        }
 
     }
 
@@ -232,7 +249,7 @@ public class Principal {
             System.out.println("-----------------MOSTRANDO TODOS LOS ALUMNOS----------------------");
             for (int i = 0; i < nombreArreglo.size(); i++) {
                 System.out.println("---------------------------------------------------------------");
-                System.out.println("ID: " + i + "\n Nombre: " + nombreArreglo.get(i).getNombre()
+                System.out.println("ID: " + i + " \nNombre: " + nombreArreglo.get(i).getNombre()
                         + "\nHorario: " + nombreArreglo.get(i).getHorario() + "\nGrupo: " + nombreArreglo.get(i).getGrupo() + "\nAsistencia: " + nombreArreglo.get(i).isAsistencia() + "\nPromedio: " + nombreArreglo.get(i).getPromedio());
                 System.out.println("---------------------------------------------------------------");
                 this.impresion = true;
@@ -263,97 +280,95 @@ public class Principal {
     }
 
     private void CrearProfesor() {
-        errorString = true; //Para que el ciclo vuelva a iniciar en TRUE
-        //Variables locales que se usaran para el metodo
-        String  nom2 = "ok";
-        String  hor2 = "ok";
-        String jefe = "ok";
-        String carre2 = "ok";
-        System.out.println("\n" + "CREANDO PROFESOR");
-        entrada.nextLine(); //Limpia el buffer
+        errorString = true; // Para que el ciclo Volver a iniciar en VERDADERO
+        // Variables locales que se usaran para el metodo
+        String nom2 =  "ok";
+        String hor2 =  "ok";
+        String jefe =  "ok";
+        String carre2 =  "ok";
 
-        while (errorString){
-            System.out.println("\n" + "Ingrese el Nombre Completo del profesor: ");
+        System.out.println("\n" + "CREANDO PPROFESOR");
+        entrada.nextLine();//limpiar el buffer
+
+        while(errorString){
+            System.out.println("\n" + "Ingrese nombre del profesor:");
             nom2 = entrada.nextLine();
             m = noNumerosconLetras.matcher(nom2);
-           if (m.matches()) {
-            errorString = true;
-            System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
-        } else {
-            errorString = false;
+            if (!m.matches()) {
+                errorString =  true ;
+                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
+            } else {
+                errorString =  false ;
+            }
         }
-    }
-
         System.out.println("\n" + "Ingrese Domicilio");
         String dom2 = entrada.nextLine();
-
         errorString = true;
         while(errorString){
             System.out.println("\n" + "Ingrese turno del profesor:");
             hor2 = entrada.nextLine();
             m = noNumerosconLetras.matcher(hor2);
-            if (m.matches()) {
-                errorString = true;
-                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            if (!m.matches()) {
+                errorString =  true ;
+                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
             } else {
-                errorString = false;
+                errorString =  false ;
             }
-    }
-
+        }
         errorString = true;
         while(errorString){
-        System.out.println("\n" + "Ingrese el jefe inmediato:");
-        jefe = entrada.nextLine();
+            System.out.println("\n" + "Ingrese el jefe inmediato:");
+            jefe = entrada.nextLine();
             m = noNumerosconLetras.matcher(jefe);
-            if (m.matches()) {
-                errorString = true;
-                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+            if (!m.matches()) {
+                errorString =  true ;
+                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
             } else {
-                errorString = false;
+                errorString =  false ;
             }
         }
         errorString = true;
         while(errorString){
-        System.out.println("\n" + "Ingrese la materia que imparte seguida de la carrera (Ej. Calculo Integral - SISTEMAS)");
-        carre2 = entrada.nextLine();
-        m = noNumerosconLetras.matcher(carre2);
-        if (m.matches()) {
-            errorString = true;
-            System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
-        } else {
-            errorString = false;
+            System.out.println("\n" + "Ingrese la materia que imparte seguida de la carrera (Ej. Calculo Integral - SISTEMAS)");
+            carre2 = entrada.nextLine();
+            m = noNumerosconLetras.matcher(carre2);
+            if (!m.matches()) {
+                errorString =  true ;
+                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
+            } else {
+                errorString =  false ;
+            }
         }
-    }
         profesores.add(new Profesor(nom2, hor2, dom2, jefe, carre2));
     }
 
     private void CrearAlumno() {
-        errorString = true; //Para que el ciclo vuelva a iniciar en TRUE
-        //Variables locales que se usaran para el metodo
-        String nom ="ok";
+        errorString = true;//para que el ciclo vuelva iniciar en TRUE
+        //VARIABLES LOCALES QUE SE USARAN PARA EL METODO
+        String nom = "ok";
         String turn = "ok";
-        String grup ="ok";
+        String grup = "ok";
         System.out.println("\n" + "CREANDO ALUMNO");
-        entrada.nextLine(); //Limpia el buffer
+        entrada.nextLine();//Limpiar buffer
 
-        while (errorString) { //Entra a comprobar el nombre
-            System.out.println("\n" + "Ingrese el Nombre Completo: ");
+        while (errorString) {//entra a comprobar el nombre
+            System.out.println("\n" + "Ingrese Nombre completo: ");
             nom = entrada.nextLine();
             m = noNumerosconLetras.matcher(nom);
-            if(!m.matches()){ //El matches tiene que ser false porque eso quiere decir que no encontro ningun numero.
+            if(!m.matches()){//el coincide tiene que ser falso porque eso quiere decir que no se encntrara ningun numero
                 errorString = true;
-                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS.)");
             } else {
                 errorString = false;
             }
-        }
 
-        errorString=true; //Vuelve a poner la variable en true para entrar al while
-        while (errorString) {
-            System.out.println("\n" + "Ingrese el Turno que le corresponde: ");
+        }
+        errorString = true;//vuelve a poner la variable true para entrar al while
+        while(errorString){
+            System.out.println("\n" + "Ingrese turno que le corresponde: ");
             turn = entrada.nextLine();
             m = noNumerosconLetras.matcher(turn);
-            if (m.matches()) {
+            if(!m.matches()){
                 errorString = true;
                 System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
             } else {
@@ -361,34 +376,35 @@ public class Principal {
             }
         }
 
-        System.out.println("\n" + "Ingrese Domicilio");
+        System.out.println("\n" + "Ingrese Domicilio: ");
         String dom = entrada.nextLine();
 
-        System.out.println("\n" + "Ingrese Semestre: "+"     SOLO NUMEROS.");
+        System.out.println("\n" + "Ingrese semestre: "     +      "SOLO NUMEROS.");
         int gra = entrada.nextInt();
 
-        errorString=true;
+        errorString = true;
         entrada.nextLine();
-        while(errorString) {
-            System.out.println("\n" + "Ingrese su Grupo");
+        while(errorString){
+            System.out.println("\n" + "Ingrese Grupo: ");
             grup = entrada.nextLine();
             m = noNumerosconLetras.matcher(grup);
-            if (m.matches()) {
+            if(!m.matches()){
                 errorString = true;
                 System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
+
             } else {
                 errorString = false;
             }
         }
+
         alumnos.add(new Estudiante(nom, turn, dom, gra, grup));
     }
-
 
     private static void MostrarMenuPrincipal() {
         System.out.println("\n" + "1. A L U M N O");
         System.out.println("2. P R O F E S O R");
         System.out.println("3. C E R R A R  S E S I O N");
-        System.out.println("\t \t¿Qué Opcion desea escoger?");
+        System.out.println("\t \t¿Que opcion desea escoger?");
     }
 
     private static void MostrarSubMenuAlumnos() {
@@ -396,7 +412,7 @@ public class Principal {
         System.out.println("2. B O R R A R  A L U M N O");
         System.out.println("3. V E R  A L U M N O");
         System.out.println("4. R E G R E S A R");
-        System.out.println("\t \tQué Opcion desea escoger?");
+        System.out.println("\t \t ¿Que pcion desea escoger?");
     }
 
     private static void MostrarMenuProf() {
