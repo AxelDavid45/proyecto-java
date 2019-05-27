@@ -1,7 +1,7 @@
 package Un;
 
 import java.util.ArrayList;
-//import java.util.InputMismatchException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 //Immportamos el paquete para comprobar que no entren
@@ -12,16 +12,12 @@ public class Principal {
     static final String ADMINISTRADOR = "1";
     static final String PASSWORD = "1";
     //Patron con la expresion regular
-    //static final Pattern noLetras = Pattern.compile("[a-zA-Z]+");
-    //static final Pattern noNumerosconLetras = Pattern.compile("[0-9A-Za-z]+");
-    static final Pattern noNumerosconLetras = Pattern.compile("[^0-9]+");// Expresión regular cambiada para que no
-    // acepte numeros y letras
-    static final Pattern noNumeros = Pattern.compile( " [0-9] + " );
+    // Expresión regular cambiada para que no acepte numeros
+    static final Pattern noNumerosconLetras = Pattern.compile("[^0-9]+");
     //Matcher
     Matcher m;
     //Nos serviran para empezar a controlar las entradas de los datos
     boolean errorString = true;
-    boolean errorNumeric = true;
 
     //Variables
     private boolean login = false;
@@ -33,6 +29,7 @@ public class Principal {
     private Scanner entrada = new Scanner(System.in);
     private boolean impresion;
     double acumpago;
+    String stringToNumber;
 
 
     //Arraylists con que almacenan los datos del programa
@@ -61,15 +58,40 @@ public class Principal {
                     System.out.println("**** M E N U ******");
 
                     do {
-                        MostrarMenuPrincipal();
-                        OpcSelec = entrada.nextInt();
+
+                        boolean error = true;
+
+                        while (error) {
+
+                            try {
+                                MostrarMenuPrincipal();
+                                stringToNumber = entrada.nextLine();
+                                OpcSelec = Integer.parseInt(stringToNumber);
+                                error = false;
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: No introduzcas letras, intentalo de nuevo");
+                            }
+
+                        }
+
                         switch (OpcSelec) {
                             //Menu alumnos
                             case 1:
                                 do {
                                     regresar = 1; //Hace que regrese al menu
-                                    MostrarSubMenuAlumnos();
-                                    OpcSelec2 = entrada.nextInt();
+                                    error = true;
+                                    while (error) { //Try para el menu de alumnos
+                                        try {
+                                            MostrarSubMenuAlumnos();
+                                            stringToNumber = entrada.nextLine(); //Tenemos una cadena
+                                            OpcSelec2 = Integer.parseInt(stringToNumber); //La convertimos a entero
+                                            error = false;
+                                        } catch (NumberFormatException e) {
+                                            System.out.println("Error: No introduzcas letras, intentalo de nuevo");
+                                        }
+
+                                    } //Fin del bucle para try-catch
+
                                     //Menu Alumnos
                                     switch (OpcSelec2) {
                                         case 1:
@@ -78,10 +100,20 @@ public class Principal {
                                         case 2:
                                             this.ImpresionArregloAlumnos(alumnos); //Borrar alumno
                                             if (this.impresion) {
-                                                System.out.println("\nIngresa el ID del elemento: ");
-                                                idElegido = entrada.nextInt();
-                                                //Borra el elemento seleccionado
-                                                alumnos.remove(idElegido);
+                                                error = true;
+                                                while (error) { //
+                                                    System.out.println("\nIngresa el ID del elemento: ");
+                                                    idElegido = entrada.nextInt();
+                                                    if (idElegido > (alumnos.size() - 1)) {
+                                                        System.out.println("Error: Has ingresado un ID inexistente..");
+                                                    } else {
+                                                        error = false;
+                                                        //Borra el elemento seleccionado
+                                                        alumnos.remove(idElegido);
+                                                    }
+                                                }
+
+
                                             }
                                             break;
                                         case 3:
@@ -97,9 +129,18 @@ public class Principal {
                             case 2:
                                 do {
                                     regresar = 1;
-                                    MostrarSubMenuProf();
-                                    System.out.println("\t \t \t ¿Que opcion desea escoger?");
-                                    OpcSelect3 = entrada.nextInt();
+                                    error = true;
+                                    while (error) { //Inicia bucle para try-catch profesores
+                                        try {
+                                            MostrarSubMenuProf(); //Menu de profesores
+                                            System.out.println("\t \t \t ¿Que opcion desea escoger?");
+                                            stringToNumber = entrada.nextLine();
+                                            OpcSelect3 = Integer.parseInt(stringToNumber);
+                                            error = false;
+                                        } catch (NumberFormatException e) {
+                                            System.out.println("Error: No introduzcas letras, intentalo de nuevo");
+                                        }
+                                    } //Fin del bucle try-catch profesores
                                     switch (OpcSelect3) {
                                         case 1:
                                             this.CrearProfesor();
@@ -109,8 +150,7 @@ public class Principal {
                                             if (this.impresion) {
                                                 System.out.println("\nIngresa el ID del elemento: ");
                                                 idElegido = entrada.nextInt();
-                                                //Borra el elemento seleccionado
-                                                profesores.remove(idElegido);
+                                                profesores.remove(idElegido); //Borra el elemento seleccionado
                                             }
                                             break;
                                         case 3:
@@ -174,7 +214,6 @@ public class Principal {
                             case 3:
                                 menu = true;
                                 login = false;
-                                System.out.println("\u000C");
                                 break;
                         }
                     } while (!menu);
@@ -237,7 +276,7 @@ public class Principal {
                     JOptionPane.showMessageDialog(null, "Tus datos son incorrectos verificalos");
                 }
             } while (!login);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             System.out.println("Saliendo del sistema...");
             System.exit(0);
         }
@@ -282,61 +321,61 @@ public class Principal {
     private void CrearProfesor() {
         errorString = true; // Para que el ciclo Volver a iniciar en VERDADERO
         // Variables locales que se usaran para el metodo
-        String nom2 =  "ok";
-        String hor2 =  "ok";
-        String jefe =  "ok";
-        String carre2 =  "ok";
+        String nom2 = "ok";
+        String hor2 = "ok";
+        String jefe = "ok";
+        String carre2 = "ok";
 
         System.out.println("\n" + "CREANDO PPROFESOR");
         entrada.nextLine();//limpiar el buffer
 
-        while(errorString){
+        while (errorString) {
             System.out.println("\n" + "Ingrese nombre del profesor:");
             nom2 = entrada.nextLine();
             m = noNumerosconLetras.matcher(nom2);
             if (!m.matches()) {
-                errorString =  true ;
-                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
+                errorString = true;
+                System.out.println(" \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) ");
             } else {
-                errorString =  false ;
+                errorString = false;
             }
         }
         System.out.println("\n" + "Ingrese Domicilio");
         String dom2 = entrada.nextLine();
         errorString = true;
-        while(errorString){
+        while (errorString) {
             System.out.println("\n" + "Ingrese turno del profesor:");
             hor2 = entrada.nextLine();
             m = noNumerosconLetras.matcher(hor2);
             if (!m.matches()) {
-                errorString =  true ;
-                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
+                errorString = true;
+                System.out.println(" \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) ");
             } else {
-                errorString =  false ;
+                errorString = false;
             }
         }
         errorString = true;
-        while(errorString){
+        while (errorString) {
             System.out.println("\n" + "Ingrese el jefe inmediato:");
             jefe = entrada.nextLine();
             m = noNumerosconLetras.matcher(jefe);
             if (!m.matches()) {
-                errorString =  true ;
-                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
+                errorString = true;
+                System.out.println(" \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) ");
             } else {
-                errorString =  false ;
+                errorString = false;
             }
         }
         errorString = true;
-        while(errorString){
+        while (errorString) {
             System.out.println("\n" + "Ingrese la materia que imparte seguida de la carrera (Ej. Calculo Integral - SISTEMAS)");
             carre2 = entrada.nextLine();
             m = noNumerosconLetras.matcher(carre2);
             if (!m.matches()) {
-                errorString =  true ;
-                System.out.println( " \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) " );
+                errorString = true;
+                System.out.println(" \n" + " CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS) ");
             } else {
-                errorString =  false ;
+                errorString = false;
             }
         }
         profesores.add(new Profesor(nom2, hor2, dom2, jefe, carre2));
@@ -349,13 +388,12 @@ public class Principal {
         String turn = "ok";
         String grup = "ok";
         System.out.println("\n" + "CREANDO ALUMNO");
-        entrada.nextLine();//Limpiar buffer
 
         while (errorString) {//entra a comprobar el nombre
             System.out.println("\n" + "Ingrese Nombre completo: ");
             nom = entrada.nextLine();
             m = noNumerosconLetras.matcher(nom);
-            if(!m.matches()){//el coincide tiene que ser falso porque eso quiere decir que no se encntrara ningun numero
+            if (!m.matches()) {//el coincide tiene que ser falso porque eso quiere decir que no se encntrara ningun numero
                 errorString = true;
                 System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS.)");
             } else {
@@ -364,11 +402,11 @@ public class Principal {
 
         }
         errorString = true;//vuelve a poner la variable true para entrar al while
-        while(errorString){
+        while (errorString) {
             System.out.println("\n" + "Ingrese turno que le corresponde: ");
             turn = entrada.nextLine();
             m = noNumerosconLetras.matcher(turn);
-            if(!m.matches()){
+            if (!m.matches()) {
                 errorString = true;
                 System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
             } else {
@@ -379,16 +417,16 @@ public class Principal {
         System.out.println("\n" + "Ingrese Domicilio: ");
         String dom = entrada.nextLine();
 
-        System.out.println("\n" + "Ingrese semestre: "     +      "SOLO NUMEROS.");
+        System.out.println("\n" + "Ingrese semestre: " + "SOLO NUMEROS.");
         int gra = entrada.nextInt();
 
         errorString = true;
         entrada.nextLine();
-        while(errorString){
+        while (errorString) {
             System.out.println("\n" + "Ingrese Grupo: ");
             grup = entrada.nextLine();
             m = noNumerosconLetras.matcher(grup);
-            if(!m.matches()){
+            if (!m.matches()) {
                 errorString = true;
                 System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO.(SOLO SE ADMITEN LETRAS)");
 
