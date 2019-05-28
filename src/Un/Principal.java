@@ -1,7 +1,6 @@
 package Un;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 //Immportamos el paquete para comprobar que no entren
@@ -59,7 +58,6 @@ public class Principal {
                     System.out.println("**** M E N U ******");
 
                     do {
-
 
 
                         while (error) {
@@ -296,7 +294,7 @@ public class Principal {
                             }
                         }
 
-                    }while (!menu) ;
+                    } while (!menu);
                 } else if (Usuario.equals("Salario") && Password.equals("anotu")) {
                     int horastraba = Integer.parseInt(JOptionPane.showInputDialog(null, "Ingresa las horas trabajadas del administrador"));
                     double salarioAd = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese el salario del administrador"));
@@ -504,5 +502,8 @@ public class Principal {
         System.out.println("7. V E R  E L  A C U M U L A D O  D E  P A G O  D E  L O S  M A E S T R O S");
         System.out.println("8. R E G R E S A R");
     }
+
+
+
 
 }
