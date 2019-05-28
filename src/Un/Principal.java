@@ -1,5 +1,7 @@
 package Un;
 
+import com.sun.javafx.image.IntPixelGetter;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -102,7 +104,7 @@ public class Principal {
                                             this.ImpresionArregloAlumnos(alumnos); //Borrar alumno
                                             if (this.impresion) {
                                                 error = true;
-                                                while (error) { //
+                                                while (error) { //Empieza comprobacion de id existente
                                                     System.out.println("\nIngresa el ID del elemento: ");
                                                     idElegido = entrada.nextInt();
                                                     if (idElegido > (alumnos.size() - 1)) {
@@ -152,12 +154,19 @@ public class Principal {
                                             if (this.impresion) {
                                                 error = true;
                                                 while (error) {
-
-                                                    System.out.println("\nIngresa el ID del elemento: ");
-                                                    idElegido = entrada.nextInt();
+                                                    while (error) {
+                                                        try {
+                                                            System.out.println("\nIngresa el ID del elemento: ");
+                                                            stringToNumber = entrada.nextLine();
+                                                            idElegido = Integer.parseInt(stringToNumber);
+                                                            error = false;
+                                                        } catch (NumberFormatException e) {
+                                                            System.out.println("Error: Introduce solo numeros...");
+                                                        }
+                                                    }
                                                     if (idElegido > profesores.size() - 1) {
-
                                                         System.out.println("Error: Has ingresado un ID inexistente..");
+                                                        error = true;
                                                     } else {
                                                         error = false;
                                                         profesores.remove(idElegido); //Borra el elemento seleccionado
@@ -173,14 +182,21 @@ public class Principal {
                                             if (this.impresion) {
                                                 error = true;
                                                 while (error) {
-                                                    System.out.println("Ingresa el id para marcarle la asistencia");
-                                                    idElegido = entrada.nextInt();
+                                                    while (error) {
+                                                        try {
+                                                            System.out.println("Ingresa el id para marcarle la asistencia");
+                                                            stringToNumber = entrada.nextLine();
+                                                            idElegido = Integer.parseInt(stringToNumber);
+                                                            error = false;
+                                                        } catch (NumberFormatException e) {
+                                                            System.out.println("Error: Introduce solo numeros...");
+                                                        }
+                                                    }
                                                     if (idElegido > (profesores.size() - 1)) {
                                                         System.out.println("Error: Has ingresado un ID inexistente..");
+                                                        error = true;
                                                     } else {
                                                         error = false;
-
-
                                                         profesores.get(idElegido).setAsistencia(true);
                                                     }
                                                 }
@@ -191,37 +207,74 @@ public class Principal {
                                             this.ImpresionArregloProfesores(profesores);
                                             if (this.impresion) {
                                                 String grupo = "ok";
-                                                System.out.println("Ingrese el ID del profesor");
-                                                idElegido = entrada.nextInt();
-                                                entrada.nextLine();
-
-                                                errorString = true;
-                                                while (errorString) {
-                                                    System.out.println("Ingresa el grupo:");
-                                                    grupo = entrada.nextLine();
-                                                    profesores.get(idElegido).setGrupo(grupo);
-                                                    m = noNumerosconLetras.matcher(grupo);
-                                                    if (!m.matches()) {
-                                                        errorString = true;
-                                                        System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS)");
+                                                error = true;
+                                                while (error) {
+                                                    while (error) {
+                                                        try {
+                                                            System.out.println("Ingrese el ID del profesor");
+                                                            stringToNumber = entrada.nextLine();
+                                                            idElegido = Integer.parseInt(stringToNumber);
+                                                            error = false;
+                                                        } catch (NumberFormatException e) {
+                                                            System.out.println("Error: Escribe solo numeros...");
+                                                        }
+                                                    }
+                                                    if (idElegido > (profesores.size() - 1)) {
+                                                        System.out.println("Error: No existe el id...");
+                                                        error = true;
                                                     } else {
-                                                        errorString = false;
+                                                        entrada.nextLine();
+                                                        errorString = true;
+                                                        while (errorString) {
+                                                            System.out.println("Ingresa el grupo:");
+                                                            grupo = entrada.nextLine();
+                                                            m = noNumerosconLetras.matcher(grupo);
+                                                            if (!m.matches()) {
+                                                                errorString = true;
+                                                                System.out.println("\n CARACTERES INVALIDOS, VUELVE A INTENTARLO. (SOLO SE ADMITEN LETRAS)");
+                                                            } else {
+                                                                profesores.get(idElegido).setGrupo(grupo);
+                                                                errorString = false;
+                                                            }
+                                                        }
+
                                                     }
                                                 }
+
+
+
+
                                             }
                                             break;
                                         case 6:
                                             this.ImpresionArregloProfesores(profesores);
+                                            error = true;
+                                            int ht = 0;
                                             if (this.impresion) {
-                                                System.out.println("Ingresa el id para asignar pago");
-                                                idElegido = entrada.nextInt();
-                                                System.out.println("Â¿Cuantas horas trabajo el profesor");
-                                                int ht = entrada.nextInt();
-                                                profesores.get(idElegido).setHt(ht);
-                                                salario = profesores.get(idElegido).cobrar();
-                                                acumpago = Admon.estadodeCuenta(salario);//---------------Acumulador de todos los pagos.
-                                                System.out.println("\n" + "El pago del profesor " + profesores.get(idElegido).getNombre() + " es"
-                                                        + " " + salario);
+                                                while (error) {
+                                                    try {
+                                                        System.out.println("Ingresa el id para asignar pago");
+                                                        stringToNumber = entrada.nextLine();
+                                                        idElegido = Integer.parseInt(stringToNumber);
+                                                        System.out.println("¿Cuantas horas trabajo el profesor");
+                                                        stringToNumber = entrada.nextLine();
+                                                        ht = Integer.parseInt(stringToNumber);
+                                                    } catch (NumberFormatException e) {
+                                                        System.out.println("Error: Solo escribe numeros...");
+                                                    }
+                                                    if (idElegido > (profesores.size() - 1)) {
+                                                        System.out.println("Error: No existe ese id...");
+                                                        error = true;
+                                                    } else {
+                                                        profesores.get(idElegido).setHt(ht);
+                                                        salario = profesores.get(idElegido).cobrar();
+                                                        acumpago = Admon.estadodeCuenta(salario);//---------------Acumulador de todos los pagos.
+                                                        System.out.println("\n" + "El pago del profesor " + profesores.get(idElegido).getNombre() + " es"
+                                                                + " " + salario);
+                                                        error = false;
+                                                    }
+                                                }
+
                                             }
                                             break;
                                         case 7:
@@ -237,7 +290,7 @@ public class Principal {
                                 try {
                                     guardarArregloAlumno(alumnos, "alumnos.txt");
                                     System.out.println("Exportado con exito");
-                                }catch (IOException e) {
+                                } catch (IOException e) {
                                     System.out.println("error: " + e.getMessage());
                                     System.out.println("No se pudo guardar el fichero");
                                 }
@@ -246,7 +299,7 @@ public class Principal {
                                 try {
                                     guardarArregloProfesor(profesores, "profesores.txt");
                                     System.out.println("Exportado con exito");
-                                }catch (IOException e) {
+                                } catch (IOException e) {
                                     System.out.println("error: " + e.getMessage());
                                     System.out.println("No se pudo guardar el fichero");
                                 }
@@ -277,18 +330,37 @@ public class Principal {
                             switch (resp2) {
                                 case 1:
                                     this.ImpresionArregloAlumnos(alumnos);
+                                    error = true;
+                                    int ID = 0;
                                     if (this.impresion) {
-                                        System.out.println("Ingrese el Id del Alumno");
-                                        int ID = entrada.nextInt();
-                                        entrada.nextLine();
-                                        System.out.println("¿El Alumno asistio hoy?");
-                                        String asis = entrada.nextLine();
+                                        while (error) {
+                                            while (error) {
+                                                try {
+                                                    System.out.println("Ingrese el Id del Alumno");
+                                                    stringToNumber = entrada.nextLine();
+                                                    ID = Integer.parseInt(stringToNumber);
+                                                    error = false;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Error: Solo escribe numeros...");
+                                                }
+                                            }
 
-                                        if (asis.equals("si") || asis.equals("Si")) {
-                                            alumnos.get(ID).setAsistencia(true);
-                                        } else {
-                                            alumnos.get(ID).setAsistencia(false);
+                                            if (ID > (alumnos.size() - 1)) {
+                                                System.out.println("Error: No existe el id...");
+                                                error = true;
+                                            } else {
+                                                entrada.nextLine();
+                                                System.out.println("¿El Alumno asistio hoy?");
+                                                String asis = entrada.nextLine();
+                                                if (asis.equals("si") || asis.equals("Si")) {
+                                                    alumnos.get(ID).setAsistencia(true);
+                                                } else {
+                                                    alumnos.get(ID).setAsistencia(false);
+                                                }
+                                                error = false;
+                                            }
                                         }
+
 
                                     }
                                     break;
@@ -297,12 +369,32 @@ public class Principal {
                                     break;
                                 case 3:
                                     this.ImpresionArregloAlumnos(alumnos);
+                                    error = true;
                                     if (this.impresion) {
-                                        System.out.println("Ingrese el ID");
-                                        idElegido = entrada.nextInt();
-                                        System.out.println("Escribe el prommedio");
-                                        double prom = entrada.nextDouble();
-                                        alumnos.get(idElegido).setPromedio(prom);
+                                        double prom = 0;
+                                        while (error) {
+                                            while (error) {
+                                                try {
+                                                    System.out.println("Ingrese el ID");
+                                                    stringToNumber = entrada.nextLine();
+                                                    idElegido = Integer.parseInt(stringToNumber);
+                                                    System.out.println("Escribe el prommedio");
+                                                    stringToNumber = entrada.nextLine();
+                                                    prom = Double.parseDouble(stringToNumber);
+                                                    error = false;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Error: Solo numeros...");
+                                                }
+                                            }
+                                            if (idElegido > (alumnos.size() - 1)) {
+                                                System.out.println("Error: No existe el id...");
+                                                error = true;
+                                            } else {
+                                                alumnos.get(idElegido).setPromedio(prom);
+                                                error = false;
+                                            }
+
+                                        }
                                     }
                                     break;
                                 case 4:
@@ -436,6 +528,7 @@ public class Principal {
         String nom = "ok";
         String turn = "ok";
         String grup = "ok";
+        int gra = 0;
         System.out.println("\n" + "CREANDO ALUMNO");
 
         while (errorString) {//entra a comprobar el nombre
@@ -466,8 +559,17 @@ public class Principal {
         System.out.println("\n" + "Ingrese Domicilio: ");
         String dom = entrada.nextLine();
 
-        System.out.println("\n" + "Ingrese semestre: " + "SOLO NUMEROS.");
-        int gra = entrada.nextInt();
+        error = true;
+        while (error) {
+            try {
+                System.out.println("\n" + "Ingrese semestre: " + "SOLO NUMEROS.");
+                stringToNumber = entrada.nextLine();
+                gra = Integer.parseInt(stringToNumber);
+                error = false;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Introduce solo numeros...");
+            }
+        }
 
         errorString = true;
         entrada.nextLine();
@@ -530,15 +632,16 @@ public class Principal {
             DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
             dos.writeUTF("LOS DATOS DEL ARCHIVO SON:\n");
             for (int i = 0; i < nombreArreglo.size(); i++) {
-                dos.writeUTF("Dato: " + (i + 1)+ "\n");
+                dos.writeUTF("Dato: " + (i + 1) + "\n");
                 dos.writeUTF("Nombre: " + nombreArreglo.get(i).getNombre());
                 dos.writeUTF("\nGrupo: " + nombreArreglo.get(i).getGrupo());
-                dos.writeUTF("\nPromedio: "+ nombreArreglo.get(i).getPromedio());
+                dos.writeUTF("\nPromedio: " + nombreArreglo.get(i).getPromedio());
                 dos.writeUTF("\n-----------------------------------------------");
                 dos.writeUTF("\n");
             }
         }
     }
+
     public void guardarArregloProfesor(ArrayList<Profesor> nombreArreglo, String n) throws IOException {
         {
             File f = new File(n);
@@ -546,10 +649,10 @@ public class Principal {
             DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
             dos.writeUTF("LOS DATOS DEL ARCHIVO SON:\n");
             for (int i = 0; i < nombreArreglo.size(); i++) {
-                dos.writeUTF("Dato: " + (i + 1)+ "\n");
+                dos.writeUTF("Dato: " + (i + 1) + "\n");
                 dos.writeUTF("Nombre: " + nombreArreglo.get(i).getNombre());
                 dos.writeUTF("\nGrupo: " + nombreArreglo.get(i).getGrupo());
-                dos.writeUTF("\nPromedio: "+ nombreArreglo.get(i).getCarrera());
+                dos.writeUTF("\nPromedio: " + nombreArreglo.get(i).getCarrera());
                 dos.writeUTF("\n-----------------------------------------------");
                 dos.writeUTF("\n");
             }
