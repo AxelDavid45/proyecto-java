@@ -1,12 +1,15 @@
 package Un;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+
 //Immportamos el paquete para comprobar que no entren
 import java.util.regex.*;// para las excepciones creadas por el usuario
 
 public class Principal {
+    private String nombreFichero = "datos.dat";
     //Constantes para inicio de sesion
     static final String ADMINISTRADOR = "1";
     static final String PASSWORD = "1";
@@ -58,8 +61,7 @@ public class Principal {
                     System.out.println("**** M E N U ******");
 
                     do {
-
-
+                        error = true;
                         while (error) {
 
                             try {
@@ -113,7 +115,6 @@ public class Principal {
                                                     }
                                                 }
 
-
                                             }
                                             break;
                                         case 3:
@@ -122,6 +123,7 @@ public class Principal {
                                             break;
                                         case 4:
                                             regresar = 0;
+                                            System.out.println(regresar);
                                             break;
                                     }
                                 } while (regresar != 0);
@@ -233,6 +235,24 @@ public class Principal {
                                 } while (regresar != 0);
                                 break;
                             case 3:
+                                try {
+                                    guardarArregloAlumno(alumnos, "alumnos.txt");
+                                    System.out.println("Exportado con exito");
+                                }catch (IOException e) {
+                                    System.out.println("error: " + e.getMessage());
+                                    System.out.println("No se pudo guardar el fichero");
+                                }
+                                break;
+                            case 4:
+                                try {
+                                    guardarArregloProfesor(profesores, "profesores.txt");
+                                    System.out.println("Exportado con exito");
+                                }catch (IOException e) {
+                                    System.out.println("error: " + e.getMessage());
+                                    System.out.println("No se pudo guardar el fichero");
+                                }
+                                break;
+                            case 5: //Cierra sesión
                                 menu = true;
                                 login = false;
                                 break;
@@ -289,7 +309,6 @@ public class Principal {
                                 case 4:
                                     menu = true;
                                     login = false;
-                                    System.out.println("\u000C");
                                     break;
                             }
                         }
@@ -472,7 +491,9 @@ public class Principal {
     private static void MostrarMenuPrincipal() {
         System.out.println("\n" + "1. A L U M N O");
         System.out.println("2. P R O F E S O R");
-        System.out.println("3. C E R R A R  S E S I O N");
+        System.out.println("3. E X P O R T A R (ALUMNOS)");
+        System.out.println("4. E X P O R T A R (PROFESORES)");
+        System.out.println("5. C E R R A R  S E S I O N");
         System.out.println("\t \t¿Que opcion desea escoger?");
     }
 
@@ -503,7 +524,36 @@ public class Principal {
         System.out.println("8. R E G R E S A R");
     }
 
-
-
-
+    public void guardarArregloAlumno(ArrayList<Estudiante> nombreArreglo, String n) throws IOException {
+        {
+            File f = new File(n);
+            if (!f.exists()) f.createNewFile();
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
+            dos.writeUTF("LOS DATOS DEL ARCHIVO SON:\n");
+            for (int i = 0; i < nombreArreglo.size(); i++) {
+                dos.writeUTF("Dato: " + (i + 1)+ "\n");
+                dos.writeUTF("Nombre: " + nombreArreglo.get(i).getNombre());
+                dos.writeUTF("\nGrupo: " + nombreArreglo.get(i).getGrupo());
+                dos.writeUTF("\nPromedio: "+ nombreArreglo.get(i).getPromedio());
+                dos.writeUTF("\n-----------------------------------------------");
+                dos.writeUTF("\n");
+            }
+        }
+    }
+    public void guardarArregloProfesor(ArrayList<Profesor> nombreArreglo, String n) throws IOException {
+        {
+            File f = new File(n);
+            if (!f.exists()) f.createNewFile();
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
+            dos.writeUTF("LOS DATOS DEL ARCHIVO SON:\n");
+            for (int i = 0; i < nombreArreglo.size(); i++) {
+                dos.writeUTF("Dato: " + (i + 1)+ "\n");
+                dos.writeUTF("Nombre: " + nombreArreglo.get(i).getNombre());
+                dos.writeUTF("\nGrupo: " + nombreArreglo.get(i).getGrupo());
+                dos.writeUTF("\nPromedio: "+ nombreArreglo.get(i).getCarrera());
+                dos.writeUTF("\n-----------------------------------------------");
+                dos.writeUTF("\n");
+            }
+        }
+    }
 }
