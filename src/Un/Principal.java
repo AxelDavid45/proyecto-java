@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import java.util.regex.*;// para las excepciones creadas por el usuario
 
 public class Principal {
-    private String nombreFichero = "datos.dat";
     //Constantes para inicio de sesion
     static final String ADMINISTRADOR = "1";
     static final String PASSWORD = "1";
